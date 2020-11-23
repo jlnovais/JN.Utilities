@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JN.Utilities.API</name>
+    </assembly>
+    <members>
+        <member name="T:JN.Utilities.API.Controllers.V1.IpAddress">
+            <summary>
+            What is my IP Address?
+            </summary>
+        </member>
+        <member name="T:JN.Utilities.API.Controllers.V1.OptimizationController">
+            <summary>
+            Quantity optimization problem - find the optimal quantity of items to buy with a given amount of money.
+            </summary>
+        </member>
+        <member name="M:JN.Utilities.API.Controllers.V1.OptimizationController.GetOptions">
+            <summary>
+            List methods available for this resource.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JN.Utilities.API.Controllers.V1.OptimizationController.Post(JN.Utilities.Contracts.V1.Requests.ProblemDefinition)">
+            <summary>
+            Calculate a solution for a given problem
+            </summary>
+            <param name="definition"></param>
+            <returns></returns>
+            <response code="200">Returns a solution to the problem.</response>
+            <response code="400">Invalid request.</response>
+            <response code="422">Validation errors</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:JN.Utilities.API.Controllers.V1.OptimizationController.Get(System.String)">
+            <summary>
+            Get a previous solution by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:JN.Utilities.API.Helpers.ProducesCustomAttribute">
+             <summary>
+             Media type application/problem+json lost in combination with ProducesAttribute.
+             In this way, a custom 'Produces' is needed to avoid that problem.
+            
+             also:
+             
+             In Start class / ConfigureServices method / services.AddControllers
+             
+             ReturnHttpNotAcceptable should be kept to false (Default value) for this to work but this does not show the HTTP 406 Not Acceptable code when
+             the Accept header in the request contains an unknown media type
+             
+             </summary>
+        </member>
+        <member name="M:JN.Utilities.API.ServiceInstaller.ServiceInstallerExtensions.InstallServicesInAssembly``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Install all services in classes that implement <see cref="T:JN.Utilities.API.ServiceInstaller.IServiceInstaller"/>
+            </summary>
+            <typeparam name="T">Type from which assembly the services will be installed.</typeparam>
+            <param name="services"></param>
+            <param name="configuration"></param>
+        </member>
+    </members>
+</doc>

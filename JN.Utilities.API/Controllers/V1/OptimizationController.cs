@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JN.Utilities.API.Controllers.V1
 {
+    /// <summary>
+    /// Quantity optimization problem - find the optimal quantity of items to buy with a given amount of money.
+    /// </summary>
     [Route("api/v1/[controller]")]
     [Authorize(AuthenticationSchemes = BasicAuthenticationDefaults.AuthenticationScheme, Policy = "OptimizationAccess")]
     [ApiController]

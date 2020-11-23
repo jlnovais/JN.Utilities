@@ -43,7 +43,7 @@ namespace JN.Utilities.API.Swagger
                     var assemblyNamespace = executingAssemblyName.Split('.').First();
 
                     var pathToXmlDocumentsToLoad = AppDomain.CurrentDomain.GetAssemblies()
-                        .Where(x => x.FullName.StartsWith(assemblyNamespace))
+                        .Where(x => x.FullName != null && x.FullName.StartsWith(assemblyNamespace))
                         .Select(x => x.GetName().Name + ".xml")
                         .ToList();
 
