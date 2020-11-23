@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.OrTools" Version="8.0.8283" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JN.Utilities.Core\JN.Utilities.Core.csproj" />
+  </ItemGroup>
+
+</Project>
