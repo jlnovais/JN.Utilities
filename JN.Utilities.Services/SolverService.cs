@@ -53,7 +53,7 @@ namespace JN.Utilities.Services
 
             }
 
-            res.NumberVariables = solver.NumVariables();
+            res.TotalVariables = solver.NumVariables();
 
            
             // [END variables]
@@ -70,7 +70,7 @@ namespace JN.Utilities.Services
                 i++;
             }
 
-            res.NumConstraints = solver.NumConstraints();
+            res.TotalConstraints = solver.NumConstraints();
             // [END constraints]
 
 

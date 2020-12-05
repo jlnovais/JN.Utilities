@@ -13,6 +13,7 @@ namespace JN.Utilities.API.MappingProfiles
                 //.IncludeMembers(x => x.ResponseVariables)
                 .ForMember(dest => dest.SolutionItems, opt =>
                     opt.MapFrom(src => src.ResponseVariables))
+                .ForMember(dest=>dest.Id, opt => opt.MapFrom(src=>src.Id.ToString()))
                 .ForMember(dest => dest.Statistics, opt =>
                     opt.MapFrom(src =>
                         new SolutionStatistics
@@ -20,8 +21,8 @@ namespace JN.Utilities.API.MappingProfiles
                             Iterations = src.Iterations,
                             Nodes = src.Nodes,
                             SolveTimeMs = src.SolveTimeMs,
-                            NumConstraints = src.NumConstraints,
-                            NumberVariables = src.NumberVariables
+                            TotalConstraints = src.TotalConstraints,
+                            TotalVariables = src.TotalVariables
                         }
                     ));
 

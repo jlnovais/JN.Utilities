@@ -4,6 +4,7 @@ using JN.Utilities.API.ApiConfiguration;
 using JN.Utilities.API.Helpers;
 using JN.Utilities.API.ServiceInstaller;
 using JN.Utilities.API.Swagger;
+using JN.Utilities.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,7 +32,10 @@ namespace JN.Utilities.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
+            ILoggerFactory loggerFactory,
+            IServiceProvider serviceProvider
+            )
         {
             //if (env.IsDevelopment())
             //{
@@ -59,6 +63,9 @@ namespace JN.Utilities.API
             {
                 endpoints.MapControllers();
             });
+
+            serviceProvider.GetService<IProblemSolutionRepository>().Setup();
+
         }
     }
 }

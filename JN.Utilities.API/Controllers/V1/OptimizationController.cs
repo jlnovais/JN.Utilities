@@ -71,7 +71,7 @@ namespace JN.Utilities.API.Controllers.V1
 
                 var res = _mapper.Map<Solution>(solution);
 
-                res.Id = Guid.NewGuid().ToString();
+                //res.Id = Guid.NewGuid().ToString();
 
                 return res;
             }

@@ -1,6 +1,7 @@
 ﻿using JN.Utilities.API.Helpers;
 using JN.Utilities.API.ServiceInstaller;
 using JN.Utilities.Core.Services;
+using JN.Utilities.Repositories;
 using JN.Utilities.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,10 @@ namespace JN.Utilities.API.ServicesInstallers
             services.AddScoped<ISolverService, SolverService>();
 
             services.AddScoped<IUsersService>(provider => GetIUsersService(configuration));
+
+            services.AddSingleton<IProblemSolutionRepository>(new ProblemSolutionRepository(configuration.GetConnectionString("DatabaseName")));
+
+
         }
 
         private IUsersService GetIUsersService(IConfiguration configuration)
