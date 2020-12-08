@@ -1,5 +1,6 @@
 ﻿using JN.Utilities.API.Helpers;
 using JN.Utilities.API.ServiceInstaller;
+using JN.Utilities.Core.Repositories;
 using JN.Utilities.Core.Services;
 using JN.Utilities.Repositories;
 using JN.Utilities.Services;
@@ -16,6 +17,7 @@ namespace JN.Utilities.API.ServicesInstallers
 
             services.AddScoped<IUsersService>(provider => GetIUsersService(configuration));
 
+            services.AddScoped<IProblemSolutionService, ProblemSolutionService>();
             services.AddSingleton<IProblemSolutionRepository>(new ProblemSolutionRepository(configuration.GetConnectionString("DatabaseName")));
 
 

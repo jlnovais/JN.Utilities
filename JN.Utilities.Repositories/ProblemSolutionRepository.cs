@@ -1,17 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
-using JN.Utilities.Core.Entities;
+using JN.Utilities.Core.Repositories;
 using Microsoft.Data.Sqlite;
 
 namespace JN.Utilities.Repositories
 {
-    public interface IProblemSolutionRepository
-    {
-        void Setup();
-        void Save(ProblemSolution item);
-        ProblemSolution GetById(string id);
-    }
-
     public class ProblemSolutionRepository: BaseRepository, IProblemSolutionRepository
     {
         public ProblemSolutionRepository(string connectionString) : base(connectionString)
@@ -39,19 +34,45 @@ namespace JN.Utilities.Repositories
             connection.Execute(
                 @"CREATE TABLE ProblemSolutions (
 	                    Id	TEXT NOT NULL UNIQUE,
+                        RequestDate TEXT,
+                        Username TEXT,
 	                    JsonData TEXT,
 	                    PRIMARY KEY(""Id"")
                     );");
         }
 
-        public void Save(ProblemSolution item)
+        public async Task Save(string key, string item, string username, DateTime requestDate)
         {
+
+            using var connection = new SqliteConnection(ConnectionString);
+
+            var content = new
+            {
+                id = key,
+                requestDate,
+                username,
+                jsonData = item
+            };
+
+            await connection.ExecuteAsync("INSERT INTO ProblemSolutions (Id, RequestDate, Username, JsonData)" +
+                                          "VALUES (@id, @requestDate, @username, @jsonData);", content);
 
         }
 
-        public ProblemSolution GetById(string id)
+        public async Task<string> GetById(string id, string username)
         {
-            return null;
+            using var connection = new SqliteConnection(ConnectionString);
+
+            var parameters = new
+            {
+                id, username
+            };
+
+            var res = await connection.QueryAsync<string>("SELECT JsonData FROM ProblemSolutions WHERE Id=@id AND Username = @username;", parameters);
+
+            return res.FirstOrDefault();
+
+
         }
     }
 }

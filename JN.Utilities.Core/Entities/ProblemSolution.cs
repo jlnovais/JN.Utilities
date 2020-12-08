@@ -14,7 +14,6 @@ namespace JN.Utilities.Core.Entities
         public long SolveTimeMs { get; set; }
         public long Iterations { get; set; }
         public long Nodes { get; set; }
-
-        public List<SolutionVariable> ResponseVariables = new List<SolutionVariable>();
+        public List<SolutionVariable> ResponseVariables { get; set; } = new List<SolutionVariable>();
     }
 }

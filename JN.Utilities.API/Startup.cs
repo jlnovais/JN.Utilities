@@ -4,7 +4,7 @@ using JN.Utilities.API.ApiConfiguration;
 using JN.Utilities.API.Helpers;
 using JN.Utilities.API.ServiceInstaller;
 using JN.Utilities.API.Swagger;
-using JN.Utilities.Repositories;
+using JN.Utilities.Core.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +27,6 @@ namespace JN.Utilities.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.InstallServicesInAssembly<Startup>(Configuration);
-
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 

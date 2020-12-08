@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net;
 using System.Net.Mime;
+using System.Threading.Tasks;
 using AutoMapper;
 using JN.Authentication.Scheme;
 using JN.Utilities.API.Helpers;
@@ -25,11 +27,13 @@ namespace JN.Utilities.API.Controllers.V1
     {
         private readonly ISolverService _solverService;
         private readonly IMapper _mapper;
+        private readonly IProblemSolutionService _problemSolutionService;
 
-        public OptimizationController(ISolverService solverService, IMapper mapper)
+        public OptimizationController(ISolverService solverService, IMapper mapper, IProblemSolutionService problemSolutionService)
         {
             _solverService = solverService;
             _mapper = mapper;
+            _problemSolutionService = problemSolutionService;
         }
 
 
@@ -61,17 +65,20 @@ namespace JN.Utilities.API.Controllers.V1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [HttpPost]
-        public ActionResult<Solution> Post([FromBody] ProblemDefinition definition)
+        public async Task<ActionResult<Solution>> Post([FromBody] ProblemDefinition definition)
         {
             var problemConfiguration = _mapper.Map<ProblemConfiguration>(definition);
 
+            var username = Request.HttpContext.User.Identity.Name;
+
             try
             {
-                var solution = _solverService.Solve(problemConfiguration);
+                var problemSolution = _solverService.Solve(problemConfiguration);
 
-                var res = _mapper.Map<Solution>(solution);
+                if(problemSolution.HasOptimalSolution)
+                    await _problemSolutionService.Save(problemSolution, username);
 
-                //res.Id = Guid.NewGuid().ToString();
+                var res = _mapper.Map<Solution>(problemSolution);
 
                 return res;
             }
@@ -86,11 +93,34 @@ namespace JN.Utilities.API.Controllers.V1
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        /// <response code="200">Returns a stored solution with the given id</response>
+        /// <response code="404">Solution not found</response>
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesCustom(MediaTypeNames.Application.Json, "application/problem+json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(AuthenticationSchemes = BasicAuthenticationDefaults.AuthenticationScheme, Policy = "OptimizationReaderAccess")]
         [HttpGet("{id}")]
-        public ActionResult<Solution> Get([FromRoute]string id)
+        public async Task<ActionResult<Solution>> Get([FromRoute]string id)
         {
-            return Ok("Not implemented");
+            var username = Request.HttpContext.User.Identity.Name;
+
+            var result = await _problemSolutionService.GetById(id, username);
+
+            if (result.Success)
+            {
+                var problemSolution = result.ReturnedObject;
+
+                if (problemSolution == null)
+                    return this.GetGenericProblem(HttpStatusCode.NotFound, $"Item with id '{id}' was not found.");
+
+                var res = _mapper.Map<Solution>(problemSolution);
+
+                return Ok(res);
+            }
+
+            throw new Exception(result.ErrorDescription);
+
         }
 
 
