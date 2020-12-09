@@ -5,7 +5,7 @@ using Dapper;
 using JN.Utilities.Core.Repositories;
 using Microsoft.Data.Sqlite;
 
-namespace JN.Utilities.Repositories
+namespace JN.Utilities.Repositories.SQLite
 {
     public class ProblemSolutionRepository: BaseRepository, IProblemSolutionRepository
     {

@@ -3,6 +3,7 @@ using JN.Utilities.API.ServiceInstaller;
 using JN.Utilities.Core.Repositories;
 using JN.Utilities.Core.Services;
 using JN.Utilities.Repositories;
+using JN.Utilities.Repositories.SQLite;
 using JN.Utilities.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
