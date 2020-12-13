@@ -6,6 +6,8 @@ using JN.Utilities.Repositories;
 using JN.Utilities.Repositories.SQLite;
 using JN.Utilities.Services;
 using JN.Utilities.Services.Dto;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +25,11 @@ namespace JN.Utilities.API.ServicesInstallers
             services.AddScoped<IProblemSolutionService, ProblemSolutionService>();
             services.AddSingleton<IProblemSolutionRepository>(new ProblemSolutionRepository(configuration.GetConnectionString("DatabaseName")));
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
 
         }
 

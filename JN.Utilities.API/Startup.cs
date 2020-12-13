@@ -41,6 +41,7 @@ namespace JN.Utilities.API
             //    app.UseDeveloperExceptionPage();
             //}
 
+            app.UseForwardedHeaders();
 
             app.UseCustomExceptionHandler(loggerFactory, !env.IsDevelopment());
 
