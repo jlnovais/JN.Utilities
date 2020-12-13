@@ -40,6 +40,15 @@
             <response code="200">Returns a stored solution with the given id</response>
             <response code="404">Solution not found</response>
         </member>
+        <member name="M:JN.Utilities.API.Controllers.V1.OptimizationController.Delete(System.String)">
+            <summary>
+            Delete a stored solution.
+            </summary>
+            <param name="id">Solution id</param>
+            <returns></returns>
+            <response code="204">Stored solution with the given id was successfully deleted</response>
+            <response code="404">Solution not found</response>
+        </member>
         <member name="T:JN.Utilities.API.Helpers.ProducesCustomAttribute">
              <summary>
              Media type application/problem+json lost in combination with ProducesAttribute.

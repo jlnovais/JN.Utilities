@@ -29,7 +29,8 @@ namespace JN.Utilities.API.Controllers.V1
         private readonly IMapper _mapper;
         private readonly IProblemSolutionService _problemSolutionService;
 
-        public OptimizationController(ISolverService solverService, IMapper mapper, IProblemSolutionService problemSolutionService)
+        public OptimizationController(ISolverService solverService, IMapper mapper,
+            IProblemSolutionService problemSolutionService)
         {
             _solverService = solverService;
             _mapper = mapper;
@@ -46,7 +47,7 @@ namespace JN.Utilities.API.Controllers.V1
         public IActionResult GetOptions()
         {
             //Response.Headers.Add("Allow", "GET,OPTIONS,POST,DELETE,PUT,PATCH");
-            Response.Headers.Add("Allow", "GET,POST");
+            Response.Headers.Add("Allow", "GET,POST,DELETE");
             return Ok();
         }
 
@@ -75,7 +76,7 @@ namespace JN.Utilities.API.Controllers.V1
             {
                 var problemSolution = _solverService.Solve(problemConfiguration);
 
-                if(problemSolution.HasOptimalSolution)
+                if (problemSolution.HasOptimalSolution)
                     await _problemSolutionService.Save(problemSolution, username);
 
                 var res = _mapper.Map<Solution>(problemSolution);
@@ -99,9 +100,10 @@ namespace JN.Utilities.API.Controllers.V1
         [ProducesCustom(MediaTypeNames.Application.Json, "application/problem+json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(AuthenticationSchemes = BasicAuthenticationDefaults.AuthenticationScheme, Policy = "OptimizationReaderAccess")]
+        [Authorize(AuthenticationSchemes = BasicAuthenticationDefaults.AuthenticationScheme,
+            Policy = "OptimizationReaderAccess")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Solution>> Get([FromRoute]string id)
+        public async Task<ActionResult<Solution>> Get([FromRoute] string id)
         {
             var username = Request.HttpContext.User.Identity.Name;
 
@@ -120,9 +122,36 @@ namespace JN.Utilities.API.Controllers.V1
             }
 
             throw new Exception(result.ErrorDescription);
-
         }
 
+        /// <summary>
+        /// Delete a stored solution.
+        /// </summary>
+        /// <param name="id">Solution id</param>
+        /// <returns></returns>
+        /// <response code="204">Stored solution with the given id was successfully deleted</response>
+        /// <response code="404">Solution not found</response>
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesCustom(MediaTypeNames.Application.Json, "application/problem+json")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(AuthenticationSchemes = BasicAuthenticationDefaults.AuthenticationScheme,
+            Policy = "OptimizationReaderAccess")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Solution>> Delete([FromRoute] string id)
+        {
+            var username = Request.HttpContext.User.Identity.Name;
 
+            var result = await _problemSolutionService.Delete(id, username);
+
+            if (result.Success)
+            {
+                return result.ErrorCode > 0
+                    ? NoContent()
+                    : this.GetGenericProblem(HttpStatusCode.NotFound, $"Item with id '{id}' was not found.");
+            }
+
+            throw new Exception(result.ErrorDescription);
+        }
     }
 }

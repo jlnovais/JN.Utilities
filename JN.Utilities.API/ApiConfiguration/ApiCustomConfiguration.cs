@@ -19,7 +19,6 @@ namespace JN.Utilities.API.ApiConfiguration
         {
             app.UseExceptionHandler(appBuilder =>
             {
-
                 appBuilder.Run(async context =>
                 {
                     var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();

@@ -8,5 +8,6 @@ namespace JN.Utilities.Core.Services
     {
         Task<Result> Save(ProblemSolution solution, string user);
         Task<Result<ProblemSolution>> GetById(string id, string username);
+        Task<Result> Delete(string id, string username);
     }
 }
